@@ -3,54 +3,104 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checkout</title>
+  <title>Checkout • UniThrift</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-    .card { max-width: 720px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; }
-    h1 { margin: 0 0 8px; }
-    .muted { color: #6b7280; margin: 0 0 16px; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background:#fafafa; }
+    .container { max-width: 720px; margin: 24px auto; padding:0 16px; }
+    .card { background:#fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom:16px; }
+    h1 { margin: 0 0 8px; font-size:24px; }
+    .muted { color: #6b7280; margin: 0 0 20px; font-size:14px; }
     table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-    th, td { padding: 8px 6px; border-bottom: 1px solid #f1f5f9; text-align: left; }
-    tfoot td { font-weight: 700; }
-    .actions { margin-top: 16px; display: flex; gap: 8px; }
-    button { padding: 10px 14px; border: 0; border-radius: 8px; cursor: pointer; }
-    #placeOrder { background: black; color: white; }
-    #clearCart { background: #e5e7eb; }
-    .ok { color: #166534; background: #dcfce7; padding: 10px; border-radius: 8px; margin-top: 16px; display:none; }
-    .err { color: #991b1b; background: #fee2e2; padding: 10px; border-radius: 8px; margin-top: 16px; display:none; }
-    .small { font-size: 12px; color: #6b7280; margin-top: 8px; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: left; }
+    th { font-weight:600; font-size:13px; color:#6b7280; text-transform:uppercase; }
+    tfoot td { font-weight: 700; font-size:18px; padding-top:16px; }
+    .actions { margin-top: 20px; display: flex; gap: 10px; }
+    button { padding: 12px 16px; border: 0; border-radius: 8px; cursor: pointer; font-weight:600; font-size:15px; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
+    #placeOrder { background: #1e3a8a; color: white; flex:1; }
+    #placeOrder:hover:not(:disabled) { background: #1e40af; }
+    #clearCart { background: #f3f4f6; color:#374151; }
+    #clearCart:hover { background: #e5e7eb; }
+    .alert { padding: 14px; border-radius: 8px; margin-top: 16px; display:none; }
+    .alert-success { color: #166534; background: #dcfce7; border:1px solid #86efac; }
+    .alert-error { color: #991b1b; background: #fee2e2; border:1px solid #fca5a5; }
+    .payment-section { margin-top:20px; padding:20px; border:1px solid #e5e7eb; border-radius:8px; background:#fafafa; }
+    .payment-section h3 { margin:0 0 12px; font-size:16px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display:block; font-size:14px; font-weight:600; margin-bottom:6px; color:#374151; }
+    .form-group input, .form-group select { width:100%; padding:10px; border:1px solid #d1d5db; border-radius:6px; font-size:14px; box-sizing:border-box; }
+    .form-group input:focus, .form-group select:focus { outline:none; border-color:#1e3a8a; }
+    .checkbox-group { display:flex; align-items:center; gap:8px; margin-top:12px; }
+    .checkbox-group input { width:auto; }
+    .info-badge { display:inline-block; background:#dbeafe; color:#1e40af; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600; margin-left:8px; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Checkout</h1>
-    <p class="muted">Review your items then place your order.</p>
+  <div class="container">
+    <div class="card">
+      <h1>Checkout</h1>
+      <p class="muted">Review your items and complete your order.</p>
 
-    <table id="cartTable" aria-label="Cart items">
-      <thead>
-        <tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr>
-      </thead>
-      <tbody id="cartBody"></tbody>
-      <tfoot>
-        <tr><td colspan="3">Total</td><td id="grandTotal">₱0</td></tr>
-      </tfoot>
-    </table>
+      <table id="cartTable" aria-label="Cart items">
+        <thead>
+          <tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody id="cartBody"></tbody>
+        <tfoot>
+          <tr><td colspan="3">Total</td><td id="grandTotal">₱0</td></tr>
+        </tfoot>
+      </table>
 
-    <div class="actions">
-      <button type="button" id="placeOrder">Place Order</button>
-      <button type="button" id="clearCart">Clear Cart</button>
+      <div class="payment-section">
+        <h3>Payment Details <span class="info-badge">MOCK - No Real Payment</span></h3>
+        <p style="color:#6b7280;font-size:13px;margin:0 0 16px">This is a demo checkout. No actual transaction will be processed.</p>
+        
+        <div class="form-group">
+          <label for="paymentMethod">Payment Method</label>
+          <select id="paymentMethod">
+            <option value="gcash">GCash</option>
+            <option value="paymaya">PayMaya</option>
+            <option value="bank">Bank Transfer</option>
+            <option value="cod">Cash on Delivery</option>
+          </select>
+        </div>
+        
+        <div class="form-group" id="gcashGroup">
+          <label for="gcashNumber">GCash Number (Mock)</label>
+          <input type="tel" id="gcashNumber" placeholder="09171234567" maxlength="11">
+        </div>
+        
+        <div class="form-group">
+          <label for="pickupLocation">Pickup Location</label>
+          <select id="pickupLocation">
+            <option value="Gate 2.5">Gate 2.5 (ADMU)</option>
+            <option value="SEC-A Lobby">SEC-A Lobby (ADMU)</option>
+            <option value="Regis">Regis Center (ADMU)</option>
+            <option value="AS Steps">AS Steps (UPD)</option>
+            <option value="Shopping Center">Shopping Center (UPD)</option>
+            <option value="Main Gate">Main Gate (UST)</option>
+          </select>
+        </div>
+        
+        <div class="checkbox-group">
+          <input type="checkbox" id="agreeTerms" required>
+          <label for="agreeTerms" style="margin:0;font-weight:400">I agree to the terms and conditions</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="placeOrder">Confirm & Pay (Mock)</button>
+        <button type="button" id="clearCart">Clear Cart</button>
+      </div>
+
+      <div id="successAlert" class="alert alert-success"></div>
+      <div id="errorAlert" class="alert alert-error"></div>
     </div>
-
-    <div id="ok" class="ok"></div>
-    <div id="err" class="err"></div>
   </div>
 
   <script>
-    // ---- CONFIG: if your backend runs elsewhere, change this base URL ----
     const API_BASE = "http://localhost:8000";
 
-    // Load cart from localStorage. Expected shape per item:
-    // { id, name, price, qty } — adapt if your keys differ.
     function loadCart() {
       try {
         return JSON.parse(localStorage.getItem("cart") || "[]");
@@ -70,6 +120,13 @@
       const totalEl = document.getElementById("grandTotal");
       tbody.innerHTML = "";
 
+      if(cart.length === 0){
+        tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;padding:20px;color:#6b7280'>Your cart is empty. <a href='listings.html'>Browse products</a></td></tr>";
+        totalEl.textContent = formatPeso(0);
+        document.getElementById("placeOrder").disabled = true;
+        return;
+      }
+
       let total = 0;
       cart.forEach(item => {
         const sub = (Number(item.price) || 0) * (Number(item.qty) || 0);
@@ -85,28 +142,69 @@
       });
 
       totalEl.textContent = formatPeso(total);
+      document.getElementById("placeOrder").disabled = false;
     }
 
+    // Show/hide GCash number field based on payment method
+    document.getElementById("paymentMethod").addEventListener("change", (e) => {
+      const gcashGroup = document.getElementById("gcashGroup");
+      gcashGroup.style.display = e.target.value === "gcash" ? "block" : "none";
+    });
+
     async function doCheckout() {
-      const ok = document.getElementById("ok");
-      const err = document.getElementById("err");
-      ok.style.display = "none";
-      err.style.display = "none";
+      const successAlert = document.getElementById("successAlert");
+      const errorAlert = document.getElementById("errorAlert");
+      successAlert.style.display = "none";
+      errorAlert.style.display = "none";
+
+      // Validate
+      const paymentMethod = document.getElementById("paymentMethod").value;
+      const gcashNumber = document.getElementById("gcashNumber").value.trim();
+      const pickupLocation = document.getElementById("pickupLocation").value;
+      const agreeTerms = document.getElementById("agreeTerms").checked;
+
+      if (!agreeTerms) {
+        errorAlert.textContent = "⚠️ Please agree to the terms and conditions.";
+        errorAlert.style.display = "block";
+        return;
+      }
+
+      if (paymentMethod === "gcash" && (!gcashNumber || gcashNumber.length !== 11)) {
+        errorAlert.textContent = "⚠️ Please enter a valid 11-digit GCash number.";
+        errorAlert.style.display = "block";
+        return;
+      }
 
       const cart = loadCart();
-      // Build payload the server expects
+      if (cart.length === 0) {
+        errorAlert.textContent = "⚠️ Your cart is empty!";
+        errorAlert.style.display = "block";
+        return;
+      }
+
+      // Build payload
       const items = cart.map(i => ({
-        productId: i.id ?? i.productId ?? String(i.name || "item"),
-        name: i.name ?? "Item",
+        productId: i.id,
+        name: i.name,
         price: Number(i.price) || 0,
         qty: Number(i.qty) || 0
       }));
+
+      // Disable button during request
+      const placeOrderBtn = document.getElementById("placeOrder");
+      placeOrderBtn.disabled = true;
+      placeOrderBtn.textContent = "Processing...";
 
       try {
         const resp = await fetch(`${API_BASE}/api/cart/checkout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items })
+          body: JSON.stringify({ 
+            items,
+            paymentMethod,
+            gcashNumber: paymentMethod === "gcash" ? gcashNumber : null,
+            pickup: pickupLocation
+          })
         });
 
         if (!resp.ok) {
@@ -115,40 +213,45 @@
         }
 
         const data = await resp.json();
-        const pickup = data.pickup || { etaMins: 15, fee: 0 };
 
-        ok.innerHTML = `
-          <strong>Order Confirmed!</strong><br/>
-          Order ID: ${data.orderId ?? "(pending)"}<br/>
-          Total: ${formatPeso(data.total)}<br/>
-          Pickup ETA: ${pickup.etaMins} mins<br/>
-          Fee: ${formatPeso(pickup.fee)}
+        successAlert.innerHTML = `
+          <strong>✅ Order Confirmed!</strong><br/>
+          Order ID: <strong>${data.orderId}</strong><br/>
+          Total: <strong>${formatPeso(data.total || 0)}</strong><br/>
+          Payment: <strong>${paymentMethod.toUpperCase()}</strong><br/>
+          Pickup: <strong>${pickupLocation}</strong><br/><br/>
+          <em style="font-size:13px">This was a mock transaction. No real payment was processed.</em>
         `;
-        ok.style.display = "block";
+        successAlert.style.display = "block";
 
-        // Clear cart on success (optional)
+        // Clear cart
         localStorage.removeItem("cart");
         renderCart();
+
+        // Redirect after 3 seconds
+        setTimeout(() => {
+          window.location.href = `checkout-success.html?orderId=${data.orderId}`;
+        }, 3000);
+
       } catch (e) {
-        err.textContent = e.message || "Something went wrong during checkout.";
-        err.style.display = "block";
+        errorAlert.textContent = `❌ ${e.message || "Something went wrong during checkout."}`;
+        errorAlert.style.display = "block";
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.textContent = "Confirm & Pay (Mock)";
       }
     }
 
     function clearCart() {
+      if(!confirm("Are you sure you want to clear your cart?")) return;
       localStorage.removeItem("cart");
       renderCart();
-      const ok = document.getElementById("ok");
-      const err = document.getElementById("err");
-      ok.style.display = "none";
-      err.style.display = "none";
+      document.getElementById("successAlert").style.display = "none";
+      document.getElementById("errorAlert").style.display = "none";
     }
 
-    // Hook up buttons
     document.getElementById("placeOrder").addEventListener("click", doCheckout);
     document.getElementById("clearCart").addEventListener("click", clearCart);
 
-    // Initial render
     renderCart();
   </script>
 </body>
